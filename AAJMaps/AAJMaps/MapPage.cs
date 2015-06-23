@@ -23,6 +23,7 @@ namespace AAJMaps
                             VerticalOptions = LayoutOptions.FillAndExpand,
                             MapType = MapType.Hybrid
                             //comentario
+                            //comentario 2
                         };
 
             var stack = new StackLayout { Spacing = 0 };
