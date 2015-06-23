@@ -21,7 +21,8 @@ namespace AAJMaps
                             HeightRequest = 100,
                             WidthRequest = 960,
                             VerticalOptions = LayoutOptions.FillAndExpand,
-                            //MapType = MapType.Street
+                            //MapType = MapType.Street,
+                            MapType = MapType.Hybrid
                         };
 
             var stack = new StackLayout { Spacing = 0 };
