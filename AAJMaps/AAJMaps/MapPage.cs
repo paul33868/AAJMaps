@@ -22,8 +22,11 @@ namespace AAJMaps
                             WidthRequest = 960,
                             VerticalOptions = LayoutOptions.FillAndExpand,
                             MapType = MapType.Hybrid
+<<<<<<< HEAD
                             //comentario
                             //comentario 2
+=======
+>>>>>>> origin/master
                         };
 
             var stack = new StackLayout { Spacing = 0 };
