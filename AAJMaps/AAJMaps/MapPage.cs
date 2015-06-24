@@ -7,8 +7,9 @@ using System.Text;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 using Xamarin.Forms.Labs;
+using Xamarin.Forms.Labs.Controls;
 using System.Threading.Tasks;
-using Xamarin.Forms.Labs.Services.Geolocation;
+using Xamarin.Forms.Labs.Services.Geolocation; //It's not used rigth now, but it might in the near future
 using Geolocator;
 using Geolocator.Plugin;
 
@@ -18,8 +19,12 @@ namespace AAJMaps
     {
         Label lblatlong;
 
+        List<string> lista;
+
         public MapPage()
         {
+            lista = new List<string>();
+
             Map map = new Map
             {
                 IsShowingUser = true,
@@ -28,38 +33,67 @@ namespace AAJMaps
                 VerticalOptions = LayoutOptions.FillAndExpand
             };
 
-            //var slider = new Slider(1, 18, 1);
-            //slider.ValueChanged += (sender, e) =>
+            var searchAddress = new SearchBar { Placeholder = "Search Address" };
+            //var getCoords = new Button { Text = "Street" };
+            //lblatlong = new Label { Text = " " };
+
+
+            //getCoords.Clicked += async (sender, e) =>
             //{
-            //    var zoomLevel = e.NewValue; // between 1 and 18
-            //    var latlongdegrees = 360 / (Math.Pow(2, zoomLevel));
-            //    map.MoveToRegion(new MapSpan(map.VisibleRegion.Center, latlongdegrees, latlongdegrees));
+            //    var locator = CrossGeolocator.Current;
+
+            //    locator.DesiredAccuracy = 50;
+
+            //    var position = await locator.GetPositionAsync(timeout: 10000);
+
+            //    lblatlong.Text = "Lat" + position.Latitude.ToString() + "Long" + position.Longitude.ToString();
             //};
 
-            //var position = new Position(-32.9595, -60.661541); // Latitude, Longitude
-            //var pin = new Pin
-            //{
-            //    Type = PinType.Place,
-            //    Position = position,
-            //    Label = "custom pin",
-            //    Address = "custom detail info"
-            //};
-
-            //map.Pins.Add(pin);
-
-            var street = new Button { Text = "Street" };
-            lblatlong = new Label { Text = " " };
-
-
-            street.Clicked += async (sender, e) =>
+            searchAddress.TextChanged += async (e, a) =>
             {
-                var locator = CrossGeolocator.Current;
+                var addressQuery = searchAddress.Text;
+                //searchAddress.Text = "";
+                //searchAddress.Focus();
+                //searchAddress.Unfocus();
 
-                locator.DesiredAccuracy = 50;
+                var positions = (await(new Geocoder()).GetPositionsForAddressAsync(addressQuery)).ToList();
+                if (!positions.Any())
+                    return;
 
-                var position = await locator.GetPositionAsync(timeout: 10000);
+                foreach (var pos in positions)
+                {
+                    var locationAddress = (await(new Geocoder()).GetAddressesForPositionAsync(pos));
+                    if (locationAddress != null && locationAddress.ToList().Count > 0)
+                        lista.Add(locationAddress.ToList()[0]);
+                }
+            };
 
-                lblatlong.Text = "Lat" + position.Latitude.ToString() + "Long" + position.Longitude.ToString();
+            searchAddress.SearchButtonPressed += async (e, a) =>
+            {
+                lista = new List<string>();
+
+                var addressQuery = searchAddress.Text;
+                searchAddress.Text = "";
+                searchAddress.Unfocus();
+
+                var positions = (await (new Geocoder()).GetPositionsForAddressAsync(addressQuery)).ToList();
+                if (!positions.Any())
+                    return;
+
+                var position = positions.First();
+                map.MoveToRegion(MapSpan.FromCenterAndRadius(position,
+                    Distance.FromMiles(0.1)));
+                map.Pins.Add(new Pin
+                {
+                    Label = addressQuery,
+                    Position = position,
+                    Address = addressQuery
+                });
+            };
+
+            var MyList = new ListView
+            {
+                ItemsSource = lista
             };
 
             var segments = new StackLayout
@@ -67,13 +101,13 @@ namespace AAJMaps
                 Spacing = 30,
                 HorizontalOptions = LayoutOptions.CenterAndExpand,
                 Orientation = StackOrientation.Vertical,
-                Children = { street, lblatlong }
+                Children = { searchAddress, MyList }
             };
 
-            var stack = new StackLayout { Spacing = 0 };
-            stack.Children.Add(map);
+            var stack = new StackLayout { Spacing = 0 };            
             //stack.Children.Add(slider);
             stack.Children.Add(segments);
+            stack.Children.Add(map);
             Content = stack;
 
         }        
