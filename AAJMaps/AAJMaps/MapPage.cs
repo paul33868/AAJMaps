@@ -69,7 +69,6 @@ namespace AAJMaps
                 Orientation = StackOrientation.Vertical,
                 Children = { street, lblatlong }
             };
->>>>>>> origin/master
 
             var stack = new StackLayout { Spacing = 0 };
             stack.Children.Add(map);
