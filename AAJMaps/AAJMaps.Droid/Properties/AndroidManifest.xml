@@ -21,7 +21,8 @@
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 	<application android:label="AJJMaps">
 		<!-- Put your Google Maps V2 API Key here. -->
-		<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyDCdVdSC2TuPgbkXKnQc5htKfqEbQ0T-9s" />
+		<!--<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyDCdVdSC2TuPgbkXKnQc5htKfqEbQ0T-9s" />-->
+    <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyBISsYp7jYC_WVuOIqUwbvK73i_S0avWnk" />
 		<meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
 	</application>
 </manifest>
